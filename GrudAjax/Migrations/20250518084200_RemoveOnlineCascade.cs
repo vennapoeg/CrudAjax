@@ -23,6 +23,7 @@ namespace GrudAjax.Migrations
             onDelete: ReferentialAction.Restrict);
         }
 
+
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
