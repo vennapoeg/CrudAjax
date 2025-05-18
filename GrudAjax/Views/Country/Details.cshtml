@@ -1,0 +1,26 @@
+@model GrudAjax.Models.Country
+
+@{
+  ViewData["Title"] = "Country Details";
+}
+
+<h2>Country Details</h2>
+
+<div>
+  <dl class="row">
+    <dt class="col-sm-2">Code</dt>
+    <dd class="col-sm-10">@Model.Code</dd>
+
+    <dt class="col-sm-2">Name</dt>
+    <dd class="col-sm-10">@Model.Name</dd>
+
+    <dt class="col-sm-2">Currency Name</dt>
+    <dd class="col-sm-10">@Model.CurrencyName</dd>
+  </dl>
+</div>
+
+<a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a>
+<a asp-action="Index" class="btn btn-secondary">Back to List</a>
+
+
+
