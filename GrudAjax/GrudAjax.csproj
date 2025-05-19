@@ -15,4 +15,13 @@
       </PackageReference>
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="wwwroot\images\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Views\Customer\Create.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Customer\Index.cshtml" />
+    </ItemGroup>
+
 </Project>

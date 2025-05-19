@@ -1,59 +1,101 @@
 @model GrudAjax.Models.Customer
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Create Customer";
 }
 
-<h2>Create</h2>
 
-<h4>Customer</h4>
-<hr />
+<style>
 
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div class="form-group">
-                <label asp-for="FirstName" class="control-label"></label>
-                <input asp-for="FirstName" class="form-control" />
-                <span asp-validation-for="FirstName" class="text-danger"></span>
-            </div>
+ .custom-file-button input[type=file] {
+  margin-left: -2px !important;
+}
 
-            <div class="form-group">
-                <label asp-for="LastName" class="control-label"></label>
-                <input asp-for="LastName" class="form-control" />
-                <span asp-validation-for="LastName" class="text-danger"></span>
-            </div>
+.custom-file-button input[type=file]::-webkit-file-upload-button {
+  display: none;
+}
 
-            <div class="form-group">
-                <label asp-for="EmailId" class="control-label"></label>
-                <input asp-for="EmailId" class="form-control" />
-                <span asp-validation-for="EmailId" class="text-danger"></span>
-            </div>
+.custom-file-button input[type=file]::file-selector-button {
+  display: none;
+}
 
-            <div class="form-group">
-                <label asp-for="CountryId" class="control-label"></label>
-                <select asp-for="CountryId" class="form-control" asp-items="ViewBag.Countries"></select>
-                <span asp-validation-for="CountryId" class="text-danger"></span>
-            </div>
+.custom-file-button:hover label {
+  background-color: #dde0e3;
+  cursor: pointer;
+}
 
-            <div class="form-group">
-                <label asp-for="CityId" class="control-label"></label>
-                <select asp-for="CityId" class="form-control" asp-items="ViewBag.Cities"></select>
-                <span asp-validation-for="CityId" class="text-danger"></span>
-            </div>
+</style>
+<h2>Create New Customer</h2>
 
-            <div class="form-group">
-                <label asp-for="PhotoUrl" class="control-label"></label>
-                <input asp-for="PhotoUrl" class="form-control" />
-                <span asp-validation-for="PhotoUrl" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+<form asp-action="Create" enctype="multipart/form-data" method="post">
+    <div class="form-group">
+        <label asp-for="FirstName" class="control-label"></label>
+        <input asp-for="FirstName" class="form-control" />
+        <span asp-validation-for="FirstName" class="text-danger"></span>
     </div>
-</div>
+
+    <div class="form-group">
+        <label asp-for="LastName" class="control-label"></label>
+        <input asp-for="LastName" class="form-control" />
+        <span asp-validation-for="LastName" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="EmailId" class="control-label"></label>
+        <input asp-for="EmailId" class="form-control" />
+        <span asp-validation-for="EmailId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="CountryId" class="control-label"></label>
+        <select asp-for="CountryId" asp-items="ViewBag.Countries" class="form-control"
+                onchange="FillCities(this, 'CityId')"></select>
+        <span asp-validation-for="CountryId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="CityId" class="control-label"></label>
+        <select asp-for="CityId" asp-items="ViewBag.Cities" class="form-control" id="CityId">
+            <option value="">Select City</option>
+        </select>
+        <span asp-validation-for="CityId" class="text-danger"></span>
+    </div>
+
+    <div class="col-md-12 btn-group pb-2">
+
+      <div class="form-group col-4 p-0">
+
+        <label asp-for="ProfilePhoto" class="control-label"></label>
+
+        <img id="PreviewPhoto" src="~/images/noimage.png" alt="Logo Image"
+             width="125" height="125"/>
+
+        <span asp-validation-for="PhotoUrl" class="text-danger"></span>
+
+      </div>
+
+      <div class="col-1 p-0">
+      </div>
+
+      <div class="form-group col-7 p-0">
+        <div class="input-group custom-file-button mt-5 pt-5">
+          <input asp-for="ProfilePhoto" class="form-control custom-file-input" id="customFile">
+          <label class="input-group-text" for="customFile">Browse</label>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="form-group">
+      <input type="submit" value="Create" class="btn btn-primary" />
+    </div>
+
+    <div class="form-group pt-0 mt-0">
+      <div ID="HiddenDiv" style="visibility: hidden;">
+        <input asp-for="PhotoUrl" id="PhotoUrl" value=""/>
+      </div>
+    </div>
+</form>
 
 <div>
     <a asp-action="Index">Back to List</a>
@@ -61,6 +103,52 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script type="text/javascript">
+ function FillCities(lstCountryCtrl,lstCityId)
+   {
+            var lstCities = $("#"+lstCityId);
+            lstCities.empty();
+
+            lstCities.append($('<option/>',
+               {
+			   value: null,
+			   text: "Select City"
+			   }));
+
+                var selectedCountry = lstCountryCtrl.options[lstCountryCtrl.selectedIndex].value;
+
+				if (selectedCountry != null &&	selectedCountry != '')
+				{
+					$.getJSON('@Url.Action("GetCitiesByCountry")', { countryId: selectedCountry }, function (cities)
+                    {
+                            if (cities != null && !jQuery.isEmptyObject(cities))
+                            {
+                                  $.each(cities, function (index,city)
+                                    {
+								        lstCities.append($('<option/>',
+                                        {
+									        value: city.value,
+									        text: city.text
+								        }));
+							        });
+                            };
+                    });
+				}
+    return;
+}
+
+ $(".custom-file-input").on("change", function () {
+
+   var fileName = $(this).val().split("\\").pop();
+
+   document.getElementById('PreviewPhoto').src = window.URL.createObjectURL(this.files[0]);
+
+   document.getElementById('PhotoUrl').value = fileName;
+
+ });
+
+</script>
 }
 
 
