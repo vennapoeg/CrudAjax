@@ -1,10 +1,11 @@
-@model GrudAjax.Models.Country
+@using System.Runtime.InteropServices
+@model GrudAjax.Models.City
 
-<h4>Country</h4>
+<h4>City</h4>
 <hr />
 <div class="row">
   <div class="col-md-4">
-    <form asp-action="CreateModalForm" id="CreateCountryForm" method="post" data-ajax="true" data-ajax-success="refreshCountryList();">
+    <form asp-action="CreateModalForm" method="post" data-ajax="true" data-ajax-success="refreshCityList();" >
       @Html.AntiForgeryToken()
 
       <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -22,23 +23,26 @@
       </div>
 
       <div class="form-group">
-        <label asp-for="CurrencyName" class="control-label"></label>
-        <input asp-for="CurrencyName" class="form-control" />
-        <span asp-validation-for="CurrencyName" class="text-danger"></span>
+        <label asp-for="CountryId" class="control-label"></label>
+        <input type="hidden" asp-for="CountryId" class="form-control" />
+          <input asp-for="CountryName" class="form-control" readonly/>
+
+
+
+        <span asp-validation-for="CountryId" class="text-danger"></span>
       </div>
 
       <div class="form-group" style="display:none;">
-        <input id="btnSubmit" type="submit" value="Create" class="btn btn-primary" />
+        <input id='btnSubmit' type="submit" value="Create" class="btn btn-primary" />
       </div>
     </form>
   </div>
 </div>
 
 @section Scripts {
-  @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+  @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
 
 <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
-
 
 

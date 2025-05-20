@@ -17,5 +17,9 @@ public class City
 
   public virtual Country? Country { get; set; }
 
+  [NotMapped]
+  [MaxLength(75)]
+  public string CountryName {get;set;}
+
 
 }

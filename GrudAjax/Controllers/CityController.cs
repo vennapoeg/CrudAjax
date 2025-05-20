@@ -117,5 +117,31 @@ namespace GrudAjax.Controllers
 
             return lstCountries;
         }
+
+        private string GetCountryName(int countryId)
+        {
+          var country = _context.Countries.FirstOrDefault(c => c.Id == countryId);
+          return country?.Name ?? "";
+        }
+
+        [HttpGet]
+
+        public IActionResult CreateModalForm(int countryId)
+        {
+          City city = new City();
+          city.CountryId = countryId;
+          city.CountryName =GetCountryName(countryId);
+          return PartialView("_CreateModalForm", city);
+        }
+
+        [HttpPost]
+
+        public IActionResult CreateModalForm(City city)
+        {
+          _context.Add(city);
+          _context.SaveChanges();
+          return NoContent();
+        }
+
     }
 }
